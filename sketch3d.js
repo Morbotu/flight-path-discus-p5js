@@ -2,14 +2,17 @@ let discus;
 let orbit = false;
 
 new p5(p => {
-  let cnv;
+  let cam;
   let debug = false;
   let sensitivityZoom = 0.05;
   let simulate = false;
   
   p.setup = () => {
-    cnv = p.createCanvas(p.windowWidth, p.windowHeight, p.WEBGL);
-    p.camera(0, -300, 500);
+    p.createCanvas(p.windowWidth, p.windowHeight, p.WEBGL);
+    cam = p.createCamera();
+    cam.setPosition(0, -300, 500);
+    cam.lookAt(0, 0, 0);
+    p.setCamera(cam);
     discus = new Discus(p, { vz: -10 });
   };
   
@@ -47,9 +50,24 @@ new p5(p => {
   
   p.mouseWheel = event => {
     if (event.deltaY > 0) {
-      cnv._curCamera._orbit(0, 0, sensitivityZoom * p.height);
+      cam.move(0, 0, sensitivityZoom * p.height);
     } else {
-      cnv._curCamera._orbit(0, 0, -sensitivityZoom * p.height);
+      cam.move(0, 0, -sensitivityZoom * p.height);
     }
+  };
+
+  p.windowResized = () => {
+    eyeX = cam.eyeX;
+    eyeY = cam.eyeY;
+    eyeZ = cam.eyeZ;
+    centerX = cam.centerX;
+    centerY = cam.centerY;
+    centerZ = cam.centerZ;
+    upX = cam.upX;
+    upY = cam.upY;
+    upZ = cam.upZ;
+
+    p.resizeCanvas(p.windowWidth, p.windowHeight);
+    cam.camera(eyeX, eyeY, eyeZ, centerX, centerY, centerZ, upX, upY, upZ);
   };
 }, "sketchBack");
