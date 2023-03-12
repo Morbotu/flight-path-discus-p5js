@@ -1,14 +1,7 @@
 new p5(p => {
-  let slider;
-  
   p.setup = () => {
     p.createCanvas(p.windowWidth, p.windowHeight);
-    
-    slider = p.createSlider(0, 255, 100);
-    slider.position(10, 100);
-    slider.style('width', '80px');
-    slider.mousePressed(() => orbit = true);
-    slider.mouseReleased(() => orbit = false);
+    menu = new Menu(p);
   };
   
   p.draw = () => {
@@ -21,9 +14,12 @@ p: Simulate discus
 r: Reset the simulation`, 10, 20);
     if (typeof discus !== "undefined")
       discus.plotVelocity(p);
+
+    menu.drawMenu(p);
   };
 
   p.windowResized = () => {
     p.resizeCanvas(p.windowWidth, p.windowHeight);
+    menu.reposition(p);
   };
 }, "sketchFront");

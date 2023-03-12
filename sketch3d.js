@@ -1,5 +1,6 @@
 let discus;
-let orbit = false;
+let menu;
+
 
 new p5(p => {
   let cam;
@@ -13,12 +14,12 @@ new p5(p => {
     cam.setPosition(0, -300, 500);
     cam.lookAt(0, 0, 0);
     p.setCamera(cam);
-    discus = new Discus(p, { vz: -10 });
+    discus = new Discus(p, settings.discus);
   };
   
   p.draw = () => {
     p.background(220);
-    if (!orbit)
+    if (menu.orbit)
       p.orbitControl(1, 1, 0);
     if (simulate)
       discus.update(p);
@@ -42,7 +43,7 @@ new p5(p => {
         break;
       case 'r':
         simulate = false;
-        discus = new Discus(p, { vz: -10 });
+        discus = new Discus(p, settings.discus);
         break;
       default:
     }
