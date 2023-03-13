@@ -10,6 +10,7 @@ let settings = {
     toggleDebug: false,
     homeCamera: false,
     sensitivityZoom: 0.05,
+    reload: false,
   },
   menu: {
     widgets: [
@@ -54,6 +55,11 @@ let settings = {
         type: "checkbox",
         location: "control",
         target: "simulate",
+      },
+      {
+        type: "button",
+        location: "control",
+        target: "reload",
       },
     ],
   },

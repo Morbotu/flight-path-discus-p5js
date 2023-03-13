@@ -16,6 +16,7 @@ new p5(p => {
   
   p.draw = () => {
     p.background(220);
+    
     if (settings.control.orbit)
       p.orbitControl(1, 1, 0);
     if (settings.control.simulate)
@@ -32,21 +33,16 @@ new p5(p => {
       p.camera(0, -300, 500, 0, 0, 0);
       settings.control.homeCamera = false;
     }
+    if (settings.control.reload) {
+      settings.control.reload = false;
+      settings.control.simulate = false;
+      for (let checkbox of menu.checkboxes)
+        if (checkbox.location === "control" && checkbox.target === "simulate")
+          checkbox.element.checked(false);
+      discus = new Discus(p, settings.discus);
+    }
 
     discus.drawDiscus(p);
-  };
-  
-  p.keyPressed = () => {
-    switch (p.key) {
-      case 'p':
-        settings.control.simulate = !settings.control.simulate;
-        break;
-      case 'r':
-        settings.control.simulate = false;
-        discus = new Discus(p, settings.discus);
-        break;
-      default:
-    }
   };
   
   p.mouseWheel = event => {

@@ -59,7 +59,7 @@ class Menu {
     checkbox.mousePressed(() => settings.control.orbit = false);
     checkbox.mouseReleased(() => settings.control.orbit = true);
     checkbox.changed(() => settings[location][target] = checkbox.checked());
-    this.checkboxes.push({ element: checkbox, row: this.row });
+    this.checkboxes.push({ element: checkbox, target, location, row: this.row });
     this.row++;
   }
 
