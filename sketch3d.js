@@ -16,7 +16,7 @@ new p5(p => {
   
   p.draw = () => {
     p.background(220);
-    
+
     if (settings.control.orbit)
       p.orbitControl(1, 1, 0);
     if (settings.control.simulate)
@@ -46,6 +46,8 @@ new p5(p => {
   };
   
   p.mouseWheel = event => {
+    if (!settings.control.orbit)
+      return;
     if (event.deltaY > 0) {
       cam.move(0, 0, settings.control.sensitivityZoom * p.height);
     } else {

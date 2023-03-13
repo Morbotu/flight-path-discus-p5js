@@ -5,7 +5,9 @@ class Menu {
     this.checkboxes = [];
     this.row = 0;
     this.show = true;
+    this.scrolled = 0;
   
+    this._createScrollArea(p);
     for (let widget of settings.menu.widgets) {
       switch (widget.type) {
         case "slider":
@@ -22,22 +24,40 @@ class Menu {
       }
     }
 
-    this._createShowToggleButton(p);
+    this._createCollapseButton(p);
   }
 
-  _createShowToggleButton(p) {
-    this.button = p.createDiv();
-    this.button.size(15, 15);
-    this.button.position(p.width - 297, 33);
-    this.button.mouseClicked(() => this.toggleShow());
+  _createCollapseButton(p) {
+    this.collapseButton = p.createDiv();
+    this.collapseButton.size(15, 15);
+    this.collapseButton.position(p.width - 297, 33);
+    this.collapseButton.mouseClicked(() => this._toggleShow(p));
+  }
+
+  _createScrollArea(p) {
+    this.scrollArea = p.createDiv();
+    this.scrollArea.size(270, p.height - 60);
+    this.scrollArea.position(p.width - 300, 30);
+    this.scrollArea.mouseOver(() => settings.control.orbit = false);
+    this.scrollArea.mouseOut(() => settings.control.orbit = true);
+    this.scrollArea.mouseWheel(event => {
+      if (event.deltaY > 0 &&  this.scrolled < 0) {
+        this.scrolled++;
+      } else if (event.deltaY < 0 && (this.row + this.scrolled) * 30 + 60 > p.height - 30) {
+        this.scrolled--;
+      }
+      this.reposition(p);
+    });
   }
 
   _createSlider(p, minValue, maxValue, step, startValue, target, location) {
     let slider = p.createSlider(minValue, maxValue, startValue, step);
-    slider.position(p.width - 140, 45 + this.row * 30);
+    if (slider.row + this.scrolled < 0 || (this.row + this.scrolled) * 30 + 60 > p.height - 30)
+      slider.hide();
+    slider.position(p.width - 140, 45 + (this.row + this.scrolled) * 30);
     slider.style("width", "100px");
-    slider.mousePressed(() => settings.control.orbit = false);
-    slider.mouseReleased(() => settings.control.orbit = true);
+    slider.mouseOver(() => settings.control.orbit = false);
+    slider.mouseOut(() => settings.control.orbit = true);
     slider.changed(() => settings[location][target] = slider.value());
     this.sliders.push({ element: slider, target, row: this.row });
     this.row++;
@@ -45,9 +65,11 @@ class Menu {
 
   _createButton(p, target, location) {
     let button = p.createButton(target);
-    button.position(p.width - 140, 45 + this.row * 30);
-    button.mousePressed(() => settings.control.orbit = false);
-    button.mouseReleased(() => settings.control.orbit = true);
+    if (button.row + this.scrolled < 0 || (this.row + this.scrolled) * 30 + 60 > p.height - 30)
+      button.hide();
+    button.position(p.width - 140, 45 + (this.row + this.scrolled) * 30);
+    button.mouseOver(() => settings.control.orbit = false);
+    button.mouseOut(() => settings.control.orbit = true);
     button.mouseClicked(() => settings[location][target] = true);
     this.buttons.push({ element: button, row: this.row });
     this.row++;
@@ -55,9 +77,11 @@ class Menu {
 
   _createCheckbox(p, target, location) {
     let checkbox = p.createCheckbox(target, false);
-    checkbox.position(p.width - 140, 45 + this.row * 30);
-    checkbox.mousePressed(() => settings.control.orbit = false);
-    checkbox.mouseReleased(() => settings.control.orbit = true);
+    if (checkbox.row + this.scrolled < 0 || (this.row + this.scrolled) * 30 + 60 > p.height - 30)
+      checkbox.hide();
+    checkbox.position(p.width - 140, 45 + (this.row + this.scrolled) * 30);
+    checkbox.mouseOver(() => settings.control.orbit = false);
+    checkbox.mouseOut(() => settings.control.orbit = true);
     checkbox.changed(() => settings[location][target] = checkbox.checked());
     this.checkboxes.push({ element: checkbox, target, location, row: this.row });
     this.row++;
@@ -85,27 +109,49 @@ class Menu {
     p.fill(0);
     p.textAlign(p.RIGHT, p.BASELINE);
     for (let slider of this.sliders)
-      p.text(`${slider.target} = ${slider.element.value()}`, p.width - 150, 60 + slider.row * 30);
+      if (slider.row + this.scrolled >= 0 && (slider.row + this.scrolled) * 30 + 60 <= p.height - 30)
+        p.text(`${slider.target} = ${slider.element.value()}`, p.width - 150, 60 + (slider.row + this.scrolled) * 30);
     p.pop();
   }
 
   reposition(p) {
     for (let slider of this.sliders)
-      slider.element.position(p.width - 140, 45 + slider.row * 30);
+      if (slider.row + this.scrolled >= 0 && (slider.row + this.scrolled) * 30 + 60 <= p.height - 30) {
+        if (this.show)
+          slider.element.show();
+        slider.element.position(p.width - 140, 45 + (slider.row + this.scrolled) * 30);
+      } else
+        slider.element.hide();
     for (let button of this.buttons)
-      button.element.position(p.width - 140, 45 + button.row * 30);
+      if (button.row + this.scrolled >= 0 && (button.row + this.scrolled) * 30 + 60 <= p.height - 30) {
+        if (this.show)
+          button.element.show();
+        button.element.position(p.width - 140, 45 + (button.row + this.scrolled) * 30);
+      } else
+        button.element.hide();
     for (let checkbox of this.checkboxes)
-      checkbox.element.position(p.width - 140, 45 + checkbox.row * 30);
-    this.button.position(p.width - 297, 33);
+      if (checkbox.row + this.scrolled >= 0 && (checkbox.row + this.scrolled) * 30 + 60 <= p.height - 30) {
+        if (this.show)
+          checkbox.element.show();
+        checkbox.element.position(p.width - 140, 45 + (checkbox.row + this.scrolled) * 30);
+      } else
+        checkbox.element.hide();
+    this.collapseButton.position(p.width - 297, 33);
+    this.scrollArea.size(270, p.height - 60);
+    this.scrollArea.position(p.width - 300, 30);
   }
 
-  toggleShow(p) {
+  _toggleShow(p) {
     for (let element of this.sliders.concat(this.buttons).concat(this.checkboxes)) {
       if (this.show)
         element.element.hide();
       else
         element.element.show();
     }
+    if (this.show)
+      this.scrollArea.hide();
+    else
+      this.scrollArea.show();
     this.show = !this.show;
   }
 }
