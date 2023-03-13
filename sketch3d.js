@@ -4,10 +4,7 @@ let menu;
 
 new p5(p => {
   let cam;
-  let debug = false;
-  let sensitivityZoom = 0.05;
-  let simulate = false;
-  
+
   p.setup = () => {
     p.createCanvas(p.windowWidth, p.windowHeight, p.WEBGL);
     cam = p.createCamera();
@@ -19,30 +16,33 @@ new p5(p => {
   
   p.draw = () => {
     p.background(220);
-    if (menu.orbit)
+    if (settings.control.orbit)
       p.orbitControl(1, 1, 0);
-    if (simulate)
+    if (settings.control.simulate)
       discus.update(p);
+    if (settings.control.toggleDebug) {
+      if (settings.control.debug)
+        p.noDebugMode();
+      else
+        p.debugMode();
+      settings.control.debug = !settings.control.debug;
+      settings.control.toggleDebug = false;
+    }
+    if(settings.control.homeCamera) {
+      p.camera(0, -300, 500, 0, 0, 0);
+      settings.control.homeCamera = false;
+    }
+
     discus.drawDiscus(p);
   };
   
   p.keyPressed = () => {
     switch (p.key) {
-      case 'h':
-        p.camera(0, -300, 500, 0, 0, 0);
-        break;
-      case 'd':
-        if (debug)
-          p.noDebugMode();
-        else
-          p.debugMode();
-        debug = !debug;
-        break;
       case 'p':
-        simulate = !simulate;
+        settings.control.simulate = !settings.control.simulate;
         break;
       case 'r':
-        simulate = false;
+        settings.control.simulate = false;
         discus = new Discus(p, settings.discus);
         break;
       default:
@@ -51,9 +51,9 @@ new p5(p => {
   
   p.mouseWheel = event => {
     if (event.deltaY > 0) {
-      cam.move(0, 0, sensitivityZoom * p.height);
+      cam.move(0, 0, settings.control.sensitivityZoom * p.height);
     } else {
-      cam.move(0, 0, -sensitivityZoom * p.height);
+      cam.move(0, 0, -settings.control.sensitivityZoom * p.height);
     }
   };
 

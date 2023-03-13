@@ -42,6 +42,7 @@ class Discus {
     p.push();
     p.translate(this.position);
     p.cylinder(this.outsideRadius, 4, this.detailX, 1, false, false);
+    p.cylinder(this.insideRadius, 4, this.detailX, 1, false, false);
     p.translate(0, 2, 0);
     ngon(p, this.detailX - 1, this.outsideRadius, this.insideRadius);
     p.translate(0, -4, 0);

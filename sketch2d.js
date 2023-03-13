@@ -8,8 +8,6 @@ new p5(p => {
     p.clear();
     p.textSize(14);
     p.text(`Keybindings:
-h: Set camera to home position
-d: Enable debug mode
 p: Simulate discus
 r: Reset the simulation`, 10, 20);
     if (typeof discus !== "undefined")
