@@ -2,15 +2,22 @@ let settings = {
   discus: {
     vx: -10,
     vz: -10,
+    color: "white",
   },
   control: {
     orbit: true,
     simulate: false,
     debug: false,
-    toggleDebug: false,
-    homeCamera: false,
     sensitivityZoom: 0.05,
+  },
+  events: {
     reload: false,
+    homeCamera: false,
+    toggleDebug: false,
+    variableChanges: {
+      control: {},
+      discus: {},
+    },
   },
   menu: {
     widgets: [
@@ -20,8 +27,27 @@ let settings = {
         target: "vx",
         minValue: -10,
         maxValue: 10,
-        startValue: -10,
         step: 1,
+      },
+      {
+        type: "select",
+        location: "discus",
+        target: "color",
+        options: [
+          "white",
+          "red",
+          "blue",
+        ],
+      },
+      {
+        type: "select",
+        location: "discus",
+        target: "color",
+        options: [
+          "white",
+          "red",
+          "blue",
+        ],
       },
       {
         type: "slider",
@@ -29,7 +55,6 @@ let settings = {
         target: "vz",
         minValue: -10,
         maxValue: 10,
-        startValue: -10,
         step: 1,
       },
       {
@@ -38,17 +63,16 @@ let settings = {
         target: "sensitivityZoom",
         minValue: 0.05,
         maxValue: 1.00,
-        startValue: 0.05,
         step: 0.05,
       },
       {
         type: "button",
-        location: "control",
+        location: "events",
         target: "toggleDebug",
       },
       {
         type: "button",
-        location: "control",
+        location: "events",
         target: "homeCamera",
       },
       {
@@ -57,9 +81,104 @@ let settings = {
         target: "simulate",
       },
       {
-        type: "button",
+        type: "checkbox",
         location: "control",
+        target: "simulate",
+      },
+      {
+        type: "button",
+        location: "events",
         target: "reload",
+      },
+      {
+        type: "inputField",
+        location: "control",
+        target: "sensitivityZoom",
+      },
+      {
+        type: "inputField",
+        location: "control",
+        target: "sensitivityZoom",
+      },
+      {
+        type: "inputField",
+        location: "control",
+        target: "sensitivityZoom",
+      },
+      {
+        type: "inputField",
+        location: "control",
+        target: "sensitivityZoom",
+      },
+      {
+        type: "inputField",
+        location: "control",
+        target: "sensitivityZoom",
+      },
+      {
+        type: "inputField",
+        location: "control",
+        target: "sensitivityZoom",
+      },
+      {
+        type: "inputField",
+        location: "control",
+        target: "sensitivityZoom",
+      },
+      {
+        type: "inputField",
+        location: "control",
+        target: "sensitivityZoom",
+      },
+      {
+        type: "inputField",
+        location: "control",
+        target: "sensitivityZoom",
+      },
+      {
+        type: "inputField",
+        location: "control",
+        target: "sensitivityZoom",
+      },
+      {
+        type: "inputField",
+        location: "control",
+        target: "sensitivityZoom",
+      },
+      {
+        type: "inputField",
+        location: "control",
+        target: "sensitivityZoom",
+      },
+      {
+        type: "inputField",
+        location: "control",
+        target: "sensitivityZoom",
+      },
+      {
+        type: "inputField",
+        location: "control",
+        target: "sensitivityZoom",
+      },
+      {
+        type: "inputField",
+        location: "control",
+        target: "sensitivityZoom",
+      },
+      {
+        type: "inputField",
+        location: "control",
+        target: "sensitivityZoom",
+      },
+      {
+        type: "inputField",
+        location: "control",
+        target: "sensitivityZoom",
+      },
+      {
+        type: "inputField",
+        location: "control",
+        target: "sensitivityZoom",
       },
     ],
   },

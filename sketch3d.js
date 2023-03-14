@@ -21,26 +21,35 @@ new p5(p => {
       p.orbitControl(1, 1, 0);
     if (settings.control.simulate)
       discus.update(p);
-    if (settings.control.toggleDebug) {
+    if (settings.events.toggleDebug) {
       if (settings.control.debug)
         p.noDebugMode();
       else
         p.debugMode();
       settings.control.debug = !settings.control.debug;
-      settings.control.toggleDebug = false;
+      settings.events.toggleDebug = false;
     }
-    if(settings.control.homeCamera) {
+    if(settings.events.homeCamera) {
       p.camera(0, -300, 500, 0, 0, 0);
-      settings.control.homeCamera = false;
+      settings.events.homeCamera = false;
     }
-    if (settings.control.reload) {
-      settings.control.reload = false;
+    if (settings.events.reload) {
+      settings.events.reload = false;
       settings.control.simulate = false;
-      for (let checkbox of menu.checkboxes)
-        if (checkbox.location === "control" && checkbox.target === "simulate")
-          checkbox.element.checked(false);
+      settings.events.variableChanges.control.simulate = true;
       discus = new Discus(p, settings.discus);
     }
+    for (let [location, parameters] of Object.entries(settings.events.variableChanges))
+      for (let [target, value] of Object.entries(parameters))
+        if (value) {
+          settings.events.variableChanges[location][target] = false;
+          for (let element of menu.sliders.concat(menu.inputFields, menu.selects))
+            if (element.location === location && element.target === target)
+              element.element.value(settings[location][target]);
+          for (let element of menu.checkboxes)
+            if (element.location === location && element.target === target)
+              element.element.checked(settings[location][target]);
+        }
 
     discus.drawDiscus(p);
   };

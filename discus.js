@@ -1,5 +1,5 @@
 class Discus {
-  constructor(p, { x=0, y=0, z=0, vx=0, vy=0, vz=0, ax=0, ay=0, az=0, outsideRadius=240, insideRadius=110, detailX=24, mass=0.125, airResistanceConstant=0.001 } = {}) {
+  constructor(p, { x=0, y=0, z=0, vx=0, vy=0, vz=0, ax=0, ay=0, az=0, color="white", outsideRadius=240, insideRadius=110, detailX=24, mass=0.125, airResistanceConstant=0.001 } = {}) {
     this.detailX = detailX;
     this.outsideRadius = outsideRadius; 
     this.insideRadius = insideRadius;
@@ -9,6 +9,7 @@ class Discus {
     this.force = p.createVector();
     this.mass = mass;
     this.airResistanceConstant = airResistanceConstant;
+    this.color = color;
     this.plotPoints = [];
   }
   
@@ -40,6 +41,7 @@ class Discus {
   
   drawDiscus(p) {
     p.push();
+    p.fill(this.color);
     p.translate(this.position);
     p.cylinder(this.outsideRadius, 4, this.detailX, 1, false, false);
     p.cylinder(this.insideRadius, 4, this.detailX, 1, false, false);
