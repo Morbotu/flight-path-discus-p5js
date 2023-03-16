@@ -19,7 +19,7 @@ class Menu {
           this._createButton(p, widget.target, widget.location);
           break;
         case "checkbox":
-          this._createCheckbox(p, widget.target, widget.location);
+          this._createCheckbox(p, settings[widget.location][widget.target], widget.target, widget.location);
           break;
         case "inputField":
           this._createInputField(p, settings[widget.location][widget.target], widget.target, widget.location);
@@ -86,8 +86,8 @@ class Menu {
     this.row++;
   }
 
-  _createCheckbox(p, target, location) {
-    let checkbox = p.createCheckbox(target, false);
+  _createCheckbox(p, startValue, target, location) {
+    let checkbox = p.createCheckbox(target, startValue);
     if (checkbox.row + this.scrolled < 0 || (this.row + this.scrolled) * 30 + 60 > p.height - 30)
       checkbox.hide();
     checkbox.position(p.width - 140, 45 + (this.row + this.scrolled) * 30);

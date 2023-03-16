@@ -1,7 +1,8 @@
 let settings = {
   discus: {
-    vx: -10,
-    vz: -10,
+    vx: -1000,
+    vz: -1000,
+    dt: 0.1,
     color: "white",
   },
   control: {
@@ -9,11 +10,14 @@ let settings = {
     simulate: false,
     debug: false,
     sensitivityZoom: 0.05,
+    fps: 60,
+    followDiscus: true,
   },
   events: {
     reload: false,
     homeCamera: false,
     toggleDebug: false,
+    tpToDiscus: false,
     variableChanges: {
       control: {},
       discus: {},
@@ -25,36 +29,16 @@ let settings = {
         type: "slider",
         location: "discus",
         target: "vx",
-        minValue: -10,
-        maxValue: 10,
-        step: 1,
-      },
-      {
-        type: "select",
-        location: "discus",
-        target: "color",
-        options: [
-          "white",
-          "red",
-          "blue",
-        ],
-      },
-      {
-        type: "select",
-        location: "discus",
-        target: "color",
-        options: [
-          "white",
-          "red",
-          "blue",
-        ],
+        minValue: -1000,
+        maxValue: 1000,
+        step: 10,
       },
       {
         type: "slider",
         location: "discus",
         target: "vz",
-        minValue: -10,
-        maxValue: 10,
+        minValue: -1000,
+        maxValue: 1000,
         step: 1,
       },
       {
@@ -66,9 +50,37 @@ let settings = {
         step: 0.05,
       },
       {
+        type: "slider",
+        location: "discus",
+        target: "dt",
+        minValue: 0.001,
+        maxValue: 1.00,
+        step: 0.001,
+      },
+      {
+        type: "inputField",
+        location: "control",
+        target: "sensitivityZoom",
+      },
+      {
+        type: "select",
+        location: "discus",
+        target: "color",
+        options: [
+          "white",
+          "red",
+          "blue",
+        ],
+      },
+      {
         type: "button",
         location: "events",
         target: "toggleDebug",
+      },
+      {
+        type: "button",
+        location: "events",
+        target: "tpToDiscus",
       },
       {
         type: "button",
@@ -81,104 +93,14 @@ let settings = {
         target: "simulate",
       },
       {
-        type: "checkbox",
-        location: "control",
-        target: "simulate",
-      },
-      {
         type: "button",
         location: "events",
         target: "reload",
       },
       {
-        type: "inputField",
+        type: "checkbox",
         location: "control",
-        target: "sensitivityZoom",
-      },
-      {
-        type: "inputField",
-        location: "control",
-        target: "sensitivityZoom",
-      },
-      {
-        type: "inputField",
-        location: "control",
-        target: "sensitivityZoom",
-      },
-      {
-        type: "inputField",
-        location: "control",
-        target: "sensitivityZoom",
-      },
-      {
-        type: "inputField",
-        location: "control",
-        target: "sensitivityZoom",
-      },
-      {
-        type: "inputField",
-        location: "control",
-        target: "sensitivityZoom",
-      },
-      {
-        type: "inputField",
-        location: "control",
-        target: "sensitivityZoom",
-      },
-      {
-        type: "inputField",
-        location: "control",
-        target: "sensitivityZoom",
-      },
-      {
-        type: "inputField",
-        location: "control",
-        target: "sensitivityZoom",
-      },
-      {
-        type: "inputField",
-        location: "control",
-        target: "sensitivityZoom",
-      },
-      {
-        type: "inputField",
-        location: "control",
-        target: "sensitivityZoom",
-      },
-      {
-        type: "inputField",
-        location: "control",
-        target: "sensitivityZoom",
-      },
-      {
-        type: "inputField",
-        location: "control",
-        target: "sensitivityZoom",
-      },
-      {
-        type: "inputField",
-        location: "control",
-        target: "sensitivityZoom",
-      },
-      {
-        type: "inputField",
-        location: "control",
-        target: "sensitivityZoom",
-      },
-      {
-        type: "inputField",
-        location: "control",
-        target: "sensitivityZoom",
-      },
-      {
-        type: "inputField",
-        location: "control",
-        target: "sensitivityZoom",
-      },
-      {
-        type: "inputField",
-        location: "control",
-        target: "sensitivityZoom",
+        target: "followDiscus",
       },
     ],
   },

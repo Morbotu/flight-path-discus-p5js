@@ -8,6 +8,12 @@ new p5(p => {
     p.clear();
     discus.plotVelocity(p);
     menu.drawMenu(p);
+
+    p.push();
+    p.textAlign(p.LEFT, p.TOP);
+    p.textSize(16);
+    p.text(p.round(fps), 0, 0);
+    p.pop();
   };
 
   p.windowResized = () => {

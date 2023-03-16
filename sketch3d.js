@@ -1,9 +1,10 @@
 let discus;
 let menu;
-
+let fps;
 
 new p5(p => {
   let cam;
+  let updatesPerFrame;
 
   p.setup = () => {
     p.createCanvas(p.windowWidth, p.windowHeight, p.WEBGL);
@@ -11,7 +12,9 @@ new p5(p => {
     cam.setPosition(0, -300, 500);
     cam.lookAt(0, 0, 0);
     p.setCamera(cam);
+    p.frameRate(settings.control.fps);
     discus = new Discus(p, settings.discus);
+    updatesPerFrame = 1 / settings.control.fps / discus.dt;
   };
   
   p.draw = () => {
@@ -19,8 +22,17 @@ new p5(p => {
 
     if (settings.control.orbit)
       p.orbitControl(1, 1, 0);
-    if (settings.control.simulate)
-      discus.update(p);
+
+    let startPosition = discus.position.copy();
+    if (settings.control.simulate) {
+      if (updatesPerFrame > 1) {
+        for (let i = 0; i < updatesPerFrame; i++)
+          discus.update(p);
+      } else if (p.frameCount % p.round(1 / updatesPerFrame) === 0) {
+        discus.update(p);
+      }
+    }
+      
     if (settings.events.toggleDebug) {
       if (settings.control.debug)
         p.noDebugMode();
@@ -37,7 +49,9 @@ new p5(p => {
       settings.events.reload = false;
       settings.control.simulate = false;
       settings.events.variableChanges.control.simulate = true;
+      p.frameRate(settings.control.fps);
       discus = new Discus(p, settings.discus);
+      updatesPerFrame = 1 / settings.control.fps / discus.dt;
     }
     for (let [location, parameters] of Object.entries(settings.events.variableChanges))
       for (let [target, value] of Object.entries(parameters))
@@ -51,7 +65,19 @@ new p5(p => {
               element.element.checked(settings[location][target]);
         }
 
+    fps = p.frameRate();
+    if (settings.control.followDiscus) {
+      let dPosition = p5.Vector.sub(discus.position, startPosition);
+      cam.setPosition(dPosition.x + cam.eyeX, dPosition.y + cam.eyeY, dPosition.z + cam.eyeZ);
+    }
+    if (settings.events.tpToDiscus) {
+      cam.setPosition(discus.position.x, discus.position.y - 300, discus.position.z + 500);
+      cam.lookAt(discus.position.x, discus.position.y, discus.position.z);
+      settings.events.tpToDiscus = false;
+    }
+
     discus.drawDiscus(p);
+    drawReferenceGround(p);
   };
   
   p.mouseWheel = event => {
@@ -79,3 +105,9 @@ new p5(p => {
     cam.camera(eyeX, eyeY, eyeZ, centerX, centerY, centerZ, upX, upY, upZ);
   };
 }, "sketchBack");
+
+function drawReferenceGround(p) {
+  let linesX = discus.x % 1000;
+  let linesZ = discus.z % 1000;
+  p.line(discus.x - linesX, 0, -10000, discus.x - linesZ, 0, 10000);
+}
