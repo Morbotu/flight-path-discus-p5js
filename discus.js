@@ -79,8 +79,14 @@ class Discus {
     p.push();
     p.fill(this.color);
     p.translate(this.position);
-    p.rotate(this.roll, this.velocity);
-    p.rotate(this.pitch, p.createVector(this.velocity.z, 0, -this.velocity.x));
+    if (this.velocity.mag() != 0)
+      p.rotate(this.roll, this.velocity);
+    else
+      p.rotateZ(this.roll);
+    if (this.velocity.x != 0 || this.velocity.z != 0)
+      p.rotate(this.pitch, p.createVector(this.velocity.z, 0, -this.velocity.x));
+    else
+      p.rotateX(this.pitch);
     p.rotateY(this.spinDown);
     p.cylinder(this.outsideRadius, this.thickness, this.detailX, 1, false, false);
     p.cylinder(this.insideRadius, this.thickness, this.detailX, 1, false, false);
