@@ -4,7 +4,11 @@ let settings = {
     vy: -1000,
     pitch: 45,
     dt: 0.001,
-    plotScale: 0.1,
+    plotScale: 0.05,
+    plot: "velocity",
+    plotFunction: "p5.Vector.mag(value)",
+    plotMin: -2000,
+    plotMax: 10000,
     color: "white",
   },
   control: {
@@ -46,7 +50,7 @@ let settings = {
         location: "discus",
         target: "vy",
         minValue: -10000,
-        maxValue: 10000,
+        maxValue: 0,
         step: 1,
       },
       {
@@ -89,9 +93,35 @@ let settings = {
         step: 0.01,
       },
       {
+        type: "slider",
+        location: "discus",
+        target: "plotMin",
+        minValue: -10000,
+        maxValue: 0,
+        step: 1,
+      },
+      {
+        type: "slider",
+        location: "discus",
+        target: "plotMax",
+        minValue: 0,
+        maxValue: 10000,
+        step: 1,
+      },
+      {
         type: "inputField",
         location: "discus",
         target: "plotScale",
+      },
+      {
+        type: "inputField",
+        location: "discus",
+        target: "plotFunction",
+      },
+      {
+        type: "inputField",
+        location: "discus",
+        target: "plot",
       },
       {
         type: "button",

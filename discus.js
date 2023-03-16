@@ -1,8 +1,9 @@
 class Discus {
-  constructor(p, { x=0, y=0, z=0, vx=0, vy=0, vz=0, ax=0, ay=0, az=0, pitch=0, roll=0, spinDown=0, vPitch=0, vRoll=0, vSpinDown=0, aPitch=0, aRoll=0, aSpinDown=0, dt=0.1, color="white", outsideRadius=240, insideRadius=110, detailX=24, mass=0.125, airResistanceConstant=0.21, plot="velocity", plotFunction=(value) => p5.Vector.mag(value), plotSteps=20, plotScale=0.1 } = {}) {
+  constructor(p, { x=0, y=0, z=0, vx=0, vy=0, vz=0, ax=0, ay=0, az=0, pitch=0, roll=0, spinDown=0, vPitch=0, vRoll=0, vSpinDown=0, aPitch=0, aRoll=0, aSpinDown=0, dt=0.1, color="white", outsideRadius=240, insideRadius=110, thickness=4, detailX=24, mass=0.125, airResistanceConstant=0.21, plot="velocity", plotFunction="p5.Vector.mag(value)", plotSteps=20, plotScale=0.1, plotMin=0, plotMax=10000 } = {}) {
     this.detailX = detailX;
     this.outsideRadius = outsideRadius; 
     this.insideRadius = insideRadius;
+    this.thickness = thickness;
     this.position = p.createVector(x, y, z);
     this.velocity = p.createVector(vx, vy, vz);
     this.acceleration = p.createVector(ax, ay, az);
@@ -22,9 +23,10 @@ class Discus {
     this.dt = dt;
     this.plotPoints = [];
     this.plot = plot;
-    this.plotFunction = plotFunction;
+    this.plotFunction = (value) => eval(plotFunction);
     this.plotBottomLeft = p.createVector(40, 30);
-    this.plotHeight = 200;
+    this.plotMin = plotMin;
+    this.plotMax = plotMax;
     this.plotWidth = 400;
     this.plotSteps = plotSteps;
     this.plotScale = plotScale;
@@ -67,9 +69,10 @@ class Discus {
   }
   
   _calculateForce(p) {
-    this.force = p5.Vector.add(p.createVector(0, 9810 * this.mass, 0), p5.Vector.mult(p5.Vector.normalize(this.velocity), -this.airResistanceConstant / 1000 * this.velocity.magSq()));
-    // let forceGravity = 9.81 * this.mass;
-    // let 
+    // this.force = p5.Vector.add(p.createVector(0, 9810 * this.mass, 0), p5.Vector.mult(p5.Vector.normalize(this.velocity), -this.airResistanceConstant / 1000 * this.velocity.magSq()));
+    let forceGravity = 9810 * this.mass;
+    let airResistanceVariable = 0.5 * 1.293e-12 * (0.15 + 1.24 * p.sq(this.pitch)) * (p.PI * p.sin(this.pitch) * (p.sq(this.outsideRadius) - p.sq(this.insideRadius)) + this.outsideRadius * this.thickness * p.sin(p.HALF_PI + this.pitch));
+    this.force = p.createVector(0, forceGravity, 0).sub(p5.Vector.mult(this.velocity, -this.velocity.mag() * airResistanceVariable));
   }
   
   drawDiscus(p) {
@@ -79,11 +82,11 @@ class Discus {
     p.rotate(this.roll, this.velocity);
     p.rotate(this.pitch, p.createVector(this.velocity.z, 0, -this.velocity.x));
     p.rotateY(this.spinDown);
-    p.cylinder(this.outsideRadius, 4, this.detailX, 1, false, false);
-    p.cylinder(this.insideRadius, 4, this.detailX, 1, false, false);
-    p.translate(0, 2, 0);
+    p.cylinder(this.outsideRadius, this.thickness, this.detailX, 1, false, false);
+    p.cylinder(this.insideRadius, this.thickness, this.detailX, 1, false, false);
+    p.translate(0, this.thickness / 2, 0);
     ngon(p, this.detailX - 1, this.outsideRadius, this.insideRadius);
-    p.translate(0, -4, 0);
+    p.translate(0, -this.thickness, 0);
     ngon(p, this.detailX - 1, this.outsideRadius, this.insideRadius);
     p.pop();
   }
@@ -93,21 +96,21 @@ class Discus {
     p.strokeWeight(3);
     p.stroke("red");
     for (let i = 0; i < this.plotPoints.length; i++) {
-      p.point(i + this.plotBottomLeft.x, p.height - this.plotBottomLeft.y - this.plotPoints[i] * this.plotScale);
+      p.point(i + this.plotBottomLeft.x, p.height - this.plotBottomLeft.y - this.plotPoints[i] * this.plotScale + this.plotMin * this.plotScale);
     }
     
     p.stroke(0);
     p.strokeWeight(1);
-    p.line(this.plotBottomLeft.x, p.height - this.plotBottomLeft.y, this.plotBottomLeft.x, p.height - this.plotHeight - this.plotBottomLeft.y);
-    p.line(this.plotBottomLeft.x, p.height - this.plotBottomLeft.y, p.width - this.plotWidth, p.height - this.plotBottomLeft.y);
+    p.line(this.plotBottomLeft.x, p.height - this.plotBottomLeft.y, this.plotBottomLeft.x, p.height - (this.plotMax - this.plotMin) * this.plotScale - this.plotBottomLeft.y);
+    p.line(this.plotBottomLeft.x, p.height - this.plotBottomLeft.y + this.plotMin * this.plotScale, p.width - this.plotWidth, p.height - this.plotBottomLeft.y + this.plotMin * this.plotScale);
 
     p.textSize(8);
-    for (let i = 0; i <= this.plotHeight / this.plotSteps; i++) {
-      p.text(p.round(i * this.plotSteps / this.plotScale), this.plotBottomLeft.x - 30, p.height - this.plotBottomLeft.y - i * this.plotSteps);
+    for (let i = p.ceil(this.plotMin / this.plotSteps); i <= this.plotMax * this.plotScale; i += this.plotSteps) {
+      p.text(p.round(i / this.plotScale), this.plotBottomLeft.x - 30, p.height - this.plotBottomLeft.y + this.plotMin * this.plotScale - i);
     }
-    
-    for (let i = 0; i < p.width - this.plotWidth - this.plotBottomLeft.x; i += 30) {
-      p.text(p.round((i + this.plotTimeStart) * this.dt, 3), this.plotBottomLeft.x + i, p.height - this.plotBottomLeft.y + 10);
+
+    for (let i = 30; i < p.width - this.plotWidth - this.plotBottomLeft.x; i += 30) {
+      p.text(p.round((i + this.plotTimeStart) * this.dt, 3), this.plotBottomLeft.x + i, p.height - this.plotBottomLeft.y + this.plotMin * this.plotScale + 10);
     }
 
     p.pop();
