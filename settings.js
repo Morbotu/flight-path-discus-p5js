@@ -1,8 +1,10 @@
 let settings = {
   discus: {
-    vx: -1000,
     vz: -1000,
-    dt: 0.1,
+    vy: -1000,
+    pitch: 45,
+    dt: 0.001,
+    plotScale: 0.1,
     color: "white",
   },
   control: {
@@ -29,26 +31,28 @@ let settings = {
       {
         type: "slider",
         location: "discus",
-        target: "vx",
-        minValue: -10000,
-        maxValue: 10000,
-        step: 10,
-      },
-      {
-        type: "slider",
-        location: "discus",
         target: "vz",
         minValue: -10000,
         maxValue: 10000,
         step: 1,
       },
       {
+        type: "inputField",
+        location: "discus",
+        target: "vz",
+      },
+      {
         type: "slider",
-        location: "control",
-        target: "sensitivityZoom",
-        minValue: 0.05,
-        maxValue: 1.00,
-        step: 0.05,
+        location: "discus",
+        target: "vy",
+        minValue: -10000,
+        maxValue: 10000,
+        step: 1,
+      },
+      {
+        type: "inputField",
+        location: "discus",
+        target: "vy",
       },
       {
         type: "slider",
@@ -60,18 +64,34 @@ let settings = {
       },
       {
         type: "inputField",
-        location: "control",
-        target: "sensitivityZoom",
+        location: "discus",
+        target: "dt",
       },
       {
-        type: "select",
+        type: "slider",
         location: "discus",
-        target: "color",
-        options: [
-          "white",
-          "red",
-          "blue",
-        ],
+        target: "pitch",
+        minValue: 0,
+        maxValue: 90,
+        step: 1,
+      },
+      {
+        type: "inputField",
+        location: "discus",
+        target: "pitch",
+      },
+      {
+        type: "slider",
+        location: "discus",
+        target: "plotScale",
+        minValue: 0.01,
+        maxValue: 1,
+        step: 0.01,
+      },
+      {
+        type: "inputField",
+        location: "discus",
+        target: "plotScale",
       },
       {
         type: "button",
