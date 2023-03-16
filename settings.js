@@ -12,6 +12,7 @@ let settings = {
     sensitivityZoom: 0.05,
     fps: 60,
     followDiscus: true,
+    renderDistance: 5,
   },
   events: {
     reload: false,
@@ -29,16 +30,16 @@ let settings = {
         type: "slider",
         location: "discus",
         target: "vx",
-        minValue: -1000,
-        maxValue: 1000,
+        minValue: -10000,
+        maxValue: 10000,
         step: 10,
       },
       {
         type: "slider",
         location: "discus",
         target: "vz",
-        minValue: -1000,
-        maxValue: 1000,
+        minValue: -10000,
+        maxValue: 10000,
         step: 1,
       },
       {

@@ -77,7 +77,7 @@ new p5(p => {
     }
 
     discus.drawDiscus(p);
-    drawReferenceGround(p);
+    drawReferenceGround(p, settings.control.renderDistance);
   };
   
   p.mouseWheel = event => {
@@ -106,8 +106,16 @@ new p5(p => {
   };
 }, "sketchBack");
 
-function drawReferenceGround(p) {
-  let linesX = discus.x % 1000;
-  let linesZ = discus.z % 1000;
-  p.line(discus.x - linesX, 0, -10000, discus.x - linesZ, 0, 10000);
+function drawReferenceGround(p, renderDistance) {
+  let linesX = discus.position.x % 1000;
+  let linesZ = discus.position.z % 1000;
+  p.line(discus.position.x - linesX, 0, discus.position.z - linesZ - 1000 * renderDistance, discus.position.x - linesX, 0, discus.position.z - linesZ + 1000 * renderDistance);
+  p.line(discus.position.x - linesX - 1000 * renderDistance, 0, discus.position.z - linesZ, discus.position.x - linesX + 1000 * renderDistance, 0, discus.position.z - linesZ);
+
+  for (let i = 0; i < renderDistance; i++) {
+    p.line(discus.position.x - linesX - 1000 * i, 0, discus.position.z - linesZ - 1000 * renderDistance, discus.position.x - linesX - 1000 * i, 0, discus.position.z - linesZ + 1000 * renderDistance);
+    p.line(discus.position.x - linesX + 1000 * i, 0, discus.position.z - linesZ - 1000 * renderDistance, discus.position.x - linesX + 1000 * i, 0, discus.position.z - linesZ + 1000 * renderDistance);
+    p.line(discus.position.x - linesX - 1000 * renderDistance, 0, discus.position.z - linesZ - 1000 * i, discus.position.x - linesX + 1000 * renderDistance, 0, discus.position.z - linesZ - 1000 * i);
+    p.line(discus.position.x - linesX - 1000 * renderDistance, 0, discus.position.z - linesZ + 1000 * i, discus.position.x - linesX + 1000 * renderDistance, 0, discus.position.z - linesZ + 1000 * i);
+  } 
 }

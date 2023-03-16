@@ -52,7 +52,7 @@ class Discus {
   }
   
   _calculateForce() {
-    this.force = p5.Vector.mult(p5.Vector.normalize(this.velocity), -this.airResistanceConstant / 1000 * this.velocity.magSq());
+    // this.force = p5.Vector.mult(p5.Vector.normalize(this.velocity), -this.airResistanceConstant / 1000 * this.velocity.magSq());
   }
   
   drawDiscus(p) {
