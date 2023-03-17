@@ -66,7 +66,7 @@ class Menu {
     slider.style("width", "100px");
     slider.mouseOver(() => settings.control.orbit = false);
     slider.mouseOut(() => settings.control.orbit = true);
-    slider.changed(() => {
+    slider.input(() => {
       settings[location][target] = slider.value();
       settings.events.variableChanges[location][target] = true;
     });

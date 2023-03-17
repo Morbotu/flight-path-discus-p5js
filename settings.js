@@ -153,6 +153,14 @@ let settings = {
         location: "control",
         target: "followDiscus",
       },
+      {
+        type: "slider",
+        location: "control",
+        target: "fps",
+        minValue: 1,
+        maxValue: 60,
+        step: 1,
+      },
     ],
   },
 };

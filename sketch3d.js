@@ -63,6 +63,11 @@ new p5(p => {
           for (let element of menu.checkboxes)
             if (element.location === location && element.target === target)
               element.element.checked(settings[location][target]);
+          if (!settings.control.simulate && (location != "control" || target != "simulate")) {
+            discus = new Discus(p, settings.discus);
+            p.frameRate(settings.control.fps);
+            updatesPerFrame = 1 / settings.control.fps / discus.dt;
+          }
         }
 
     fps = p.frameRate();
