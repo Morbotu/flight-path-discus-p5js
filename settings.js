@@ -46,6 +46,10 @@ let settings = {
         target: "vz",
       },
       {
+        type: "section",
+        name: "Section1",
+      },
+      {
         type: "slider",
         location: "discus",
         target: "vy",
@@ -99,6 +103,75 @@ let settings = {
         minValue: -10000,
         maxValue: 0,
         step: 1,
+      },
+      {
+        type: "section",
+        name: "Section2",
+      },
+      {
+        type: "slider",
+        location: "discus",
+        target: "plotMax",
+        minValue: 0,
+        maxValue: 10000,
+        step: 1,
+      },
+      {
+        type: "inputField",
+        location: "discus",
+        target: "plotScale",
+      },
+      {
+        type: "inputField",
+        location: "discus",
+        target: "plotFunction",
+      },
+      {
+        type: "inputField",
+        location: "discus",
+        target: "plot",
+      },
+      {
+        type: "button",
+        location: "events",
+        target: "toggleDebug",
+      },
+      {
+        type: "button",
+        location: "events",
+        target: "tpToDiscus",
+      },
+      {
+        type: "button",
+        location: "events",
+        target: "homeCamera",
+      },
+      {
+        type: "checkbox",
+        location: "control",
+        target: "simulate",
+      },
+      {
+        type: "button",
+        location: "events",
+        target: "reload",
+      },
+      {
+        type: "checkbox",
+        location: "control",
+        target: "followDiscus",
+      },
+      {
+        type: "slider",
+        location: "control",
+        target: "fps",
+        minValue: 1,
+        maxValue: 60,
+        step: 1,
+      },
+      {
+        type: "section",
+        name: "Section3",
       },
       {
         type: "slider",
