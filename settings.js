@@ -46,6 +46,31 @@ let settings = {
         target: "vz",
       },
       {
+        type: "inputField",
+        location: "discus",
+        target: "vz",
+      },
+      {
+        type: "inputField",
+        location: "discus",
+        target: "vz",
+      },
+      {
+        type: "inputField",
+        location: "discus",
+        target: "vz",
+      },
+      {
+        type: "inputField",
+        location: "discus",
+        target: "vz",
+      },
+      {
+        type: "inputField",
+        location: "discus",
+        target: "vz",
+      },
+      {
         type: "section",
         name: "Section1",
       },
