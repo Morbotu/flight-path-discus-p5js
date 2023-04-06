@@ -77,10 +77,11 @@ class Discus {
     let bInside = this.insideRadius * p.sin(this.pitch + p.createVector(this.velocity.z, this.velocity.y).heading());
     let surfaceArea = p.abs(p.PI * (aOutside * bOutside - aInside * bInside));
 
-    let airResistance = 0.5 * 1.293e-6 * this.airResistanceConstant * surfaceArea * this.velocity.magSq();
+    let airResistanceWithoutConstant = 0.5 * 1.293e-9 * surfaceArea * this.velocity.magSq();
 
-    let drag = this.velocity.copy().normalize().mult(-airResistance);
-    let lift = p.createVector(-p.cos(this.pitch) * p.sin(this.roll), p.cos(this.pitch) * p.cos(this.roll), -p.sin(this.pitch)).mult(-airResistance);
+    let drag = this.velocity.copy().normalize().mult(-airResistanceWithoutConstant * 0.21);
+    let lift = this.velocity.copy().normalize().cross(p.createVector(p.cos(this.pitch) * p.sin(this.roll), -p.cos(this.pitch) * p.cos(this.roll), -p.sin(this.pitch))).mult(-airResistanceWithoutConstant * 0.21);
+
     this.force = forceGravity.add(drag).add(lift);
   }
   
