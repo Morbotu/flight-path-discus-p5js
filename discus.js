@@ -1,5 +1,5 @@
 class Discus {
-  constructor(p, { x=0, y=0, z=0, vx=0, vy=0, vz=0, ax=0, ay=0, az=0, pitch=0, roll=0, spinDown=0, vPitch=0, vRoll=0, vSpinDown=0, aPitch=0, aRoll=0, aSpinDown=0, dt=0.1, color="white", outsideRadius=240, insideRadius=110, thickness=4, detailX=24, mass=0.125, airResistanceConstant=0.21, plot="velocity", plotFunction="p5.Vector.mag(value)", plotSteps=20, plotScale=0.1, plotMin=0, plotMax=10000 } = {}) {
+  constructor(p, { x=0, y=0, z=0, vx=0, vy=0, vz=0, ax=0, ay=0, az=0, pitch=0, roll=0, spinDown=0, vPitch=0, vRoll=0, vSpinDown=0, aPitch=0, aRoll=0, aSpinDown=0, dt=0.1, color="white", outsideRadius=240, insideRadius=110, thickness=4, detailX=24, mass=0.125, airResistanceConstant=0.21e-3, plot="velocity", plotFunction="p5.Vector.mag(value)", plotSteps=20, plotScale=0.1, plotMin=0, plotMax=10000 } = {}) {
     this.detailX = detailX;
     this.outsideRadius = outsideRadius; 
     this.insideRadius = insideRadius;
@@ -68,25 +68,28 @@ class Discus {
     this.acceleration = p5.Vector.div(this.force, this.mass);
   }
   
+
   _calculateForce(p) {
-    // this.force = p5.Vector.add(p.createVector(0, 9810 * this.mass, 0), p5.Vector.mult(p5.Vector.normalize(this.velocity), -this.airResistanceConstant / 1000 * this.velocity.magSq()));
-    let forceGravity = 9810 * this.mass;
-    let airResistanceVariable = 0.5 * 1.293e-12 * (0.15 + 1.24 * p.sq(this.pitch)) * (p.PI * p.sin(this.pitch) * (p.sq(this.outsideRadius) - p.sq(this.insideRadius)) + this.outsideRadius * this.thickness * p.sin(p.HALF_PI + this.pitch));
-    this.force = p.createVector(0, forceGravity, 0).sub(p5.Vector.mult(this.velocity, -this.velocity.mag() * airResistanceVariable));
+    let forceGravity = p.createVector(0, 9810 * this.mass, 0);
+    let aOutside = this.outsideRadius * p.sin(this.roll - p.createVector(this.velocity.x, this.velocity.y).heading());
+    let bOutside = this.outsideRadius * p.sin(this.pitch + p.createVector(this.velocity.z, this.velocity.y).heading());
+    let aInside = this.insideRadius * p.sin(this.roll - p.createVector(this.velocity.x, this.velocity.y).heading());
+    let bInside = this.insideRadius * p.sin(this.pitch + p.createVector(this.velocity.z, this.velocity.y).heading());
+    let surfaceArea = p.abs(p.PI * (aOutside * bOutside - aInside * bInside));
+
+    let airResistance = 0.5 * 1.293e-6 * this.airResistanceConstant * surfaceArea * this.velocity.magSq();
+
+    let drag = this.velocity.copy().normalize().mult(-airResistance);
+    let lift = p.createVector(-p.cos(this.pitch) * p.sin(this.roll), p.cos(this.pitch) * p.cos(this.roll), -p.sin(this.pitch)).mult(-airResistance);
+    this.force = forceGravity.add(drag).add(lift);
   }
   
   drawDiscus(p) {
     p.push();
     p.fill(this.color);
     p.translate(this.position);
-    if (this.velocity.mag() != 0)
-      p.rotate(this.roll, this.velocity);
-    else
-      p.rotateZ(this.roll);
-    if (this.velocity.x != 0 || this.velocity.z != 0)
-      p.rotate(this.pitch, p.createVector(this.velocity.z, 0, -this.velocity.x));
-    else
-      p.rotateX(this.pitch);
+    p.rotateZ(this.roll);
+    p.rotateX(this.pitch);
     p.rotateY(this.spinDown);
     p.cylinder(this.outsideRadius, this.thickness, this.detailX, 1, false, false);
     p.cylinder(this.insideRadius, this.thickness, this.detailX, 1, false, false);
