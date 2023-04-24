@@ -79,9 +79,16 @@ class Discus {
 
     let airResistanceWithoutConstant = 0.5 * 1.293e-9 * surfaceArea * this.velocity.magSq();
 
-    let drag = this.velocity.copy().normalize().mult(-airResistanceWithoutConstant * 0.21);
+    let drag = this.velocity
+      .copy()
+      .normalize()
+      .mult(-airResistanceWithoutConstant * 0.21);
     let normalDiscus = p.createVector(p.cos(this.pitch) * p.sin(this.roll), -p.cos(this.pitch) * p.cos(this.roll), -p.sin(this.pitch));
-    let lift = this.velocity.copy().normalize().reflect(normalDiscus).mult(airResistanceWithoutConstant * 0.21);
+    let lift = this.velocity
+      .copy()
+      .normalize()
+      .reflect(normalDiscus)
+      .mult(airResistanceWithoutConstant * 0.21);
 
     this.force = forceGravity.add(drag).add(lift);
   }

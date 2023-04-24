@@ -17,10 +17,11 @@ let settings = {
     orbit: true,
     simulate: false,
     debug: false,
-    sensitivityZoom: 0.05,
+    sensitivityZoom: 0.3,
+    sensitivityOrbit: 5,
     fps: 60,
     followDiscus: true,
-    renderDistance: 5,
+    linesFromDiscus: 10,
   },
   events: {
     reload: false,

@@ -11,6 +11,7 @@ new p5(p => {
     cam = p.createCamera();
     cam.setPosition(0, -300, 500);
     cam.lookAt(0, 0, 0);
+    cam.perspective(p.PI / 3.0, p.width / p.height, 0.1, 100000);
     p.setCamera(cam);
     p.frameRate(settings.control.fps);
     discus = new Discus(p, settings.discus);
@@ -21,7 +22,7 @@ new p5(p => {
     p.background(220);
 
     if (settings.control.orbit)
-      p.orbitControl(1, 1, 0);
+      p.orbitControl(settings.control.sensitivityOrbit, settings.control.sensitivityOrbit, 0);
 
     let startPosition = discus.position.copy();
     if (settings.control.simulate) {
@@ -63,7 +64,7 @@ new p5(p => {
           for (let element of menu.checkboxes)
             if (element.location === location && element.target === target)
               element.element.checked(settings[location][target]);
-          if (!settings.control.simulate && (location != "control" || target != "simulate")) {
+          if (!settings.control.simulate && (location != "control" || target != "simulate") && (location != "control" || target != "followDiscus")) {
             discus = new Discus(p, settings.discus);
             p.frameRate(settings.control.fps);
             updatesPerFrame = 1 / settings.control.fps / discus.dt;
@@ -82,7 +83,7 @@ new p5(p => {
     }
 
     discus.drawDiscus(p);
-    drawReferenceGround(p, settings.control.renderDistance);
+    drawReferenceGround(p, settings.control.linesFromDiscus, cam);
   };
   
   p.mouseWheel = event => {
@@ -111,16 +112,17 @@ new p5(p => {
   };
 }, "sketchBack");
 
-function drawReferenceGround(p, renderDistance) {
-  let linesX = discus.position.x % 1000;
-  let linesZ = discus.position.z % 1000;
-  p.line(discus.position.x - linesX, 0, discus.position.z - linesZ - 1000 * renderDistance, discus.position.x - linesX, 0, discus.position.z - linesZ + 1000 * renderDistance);
-  p.line(discus.position.x - linesX - 1000 * renderDistance, 0, discus.position.z - linesZ, discus.position.x - linesX + 1000 * renderDistance, 0, discus.position.z - linesZ);
+function drawReferenceGround(p, linesFromDiscus, cam) {
+  let position = settings.control.followDiscus ? discus.position : p.createVector(cam.eyeX, cam.eyeY, cam.eyeZ);
+  let linesX = position.x % 1000;
+  let linesZ = position.z % 1000;
+  p.line(position.x - linesX, 0, position.z - linesZ - 1000 * linesFromDiscus, position.x - linesX, 0, position.z - linesZ + 1000 * linesFromDiscus);
+  p.line(position.x - linesX - 1000 * linesFromDiscus, 0, position.z - linesZ, position.x - linesX + 1000 * linesFromDiscus, 0, position.z - linesZ);
 
-  for (let i = 0; i < renderDistance; i++) {
-    p.line(discus.position.x - linesX - 1000 * i, 0, discus.position.z - linesZ - 1000 * renderDistance, discus.position.x - linesX - 1000 * i, 0, discus.position.z - linesZ + 1000 * renderDistance);
-    p.line(discus.position.x - linesX + 1000 * i, 0, discus.position.z - linesZ - 1000 * renderDistance, discus.position.x - linesX + 1000 * i, 0, discus.position.z - linesZ + 1000 * renderDistance);
-    p.line(discus.position.x - linesX - 1000 * renderDistance, 0, discus.position.z - linesZ - 1000 * i, discus.position.x - linesX + 1000 * renderDistance, 0, discus.position.z - linesZ - 1000 * i);
-    p.line(discus.position.x - linesX - 1000 * renderDistance, 0, discus.position.z - linesZ + 1000 * i, discus.position.x - linesX + 1000 * renderDistance, 0, discus.position.z - linesZ + 1000 * i);
+  for (let i = 0; i < p.floor(linesFromDiscus); i++) {
+    p.line(position.x - linesX - 1000 * i, 0, position.z - linesZ - 1000 * linesFromDiscus, position.x - linesX - 1000 * i, 0, position.z - linesZ + 1000 * linesFromDiscus);
+    p.line(position.x - linesX + 1000 * i, 0, position.z - linesZ - 1000 * linesFromDiscus, position.x - linesX + 1000 * i, 0, position.z - linesZ + 1000 * linesFromDiscus);
+    p.line(position.x - linesX - 1000 * linesFromDiscus, 0, position.z - linesZ - 1000 * i, position.x - linesX + 1000 * linesFromDiscus, 0, position.z - linesZ - 1000 * i);
+    p.line(position.x - linesX - 1000 * linesFromDiscus, 0, position.z - linesZ + 1000 * i, position.x - linesX + 1000 * linesFromDiscus, 0, position.z - linesZ + 1000 * i);
   } 
 }
