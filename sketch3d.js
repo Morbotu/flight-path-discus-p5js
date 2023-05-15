@@ -1,6 +1,7 @@
 let discus;
 let menu;
 let fps;
+let websocket;
 
 new p5(p => {
   let cam;
@@ -69,6 +70,12 @@ new p5(p => {
             p.frameRate(settings.control.fps);
             updatesPerFrame = 1 / settings.control.fps / discus.dt;
           }
+          if (location === "control" && target === "readSensor") {
+            if (settings.control.readSensor)
+              connectWebsocket();
+            else
+              websocket.close();
+          }
         }
 
     fps = p.frameRate();
@@ -111,6 +118,24 @@ new p5(p => {
     cam.camera(eyeX, eyeY, eyeZ, centerX, centerY, centerZ, upX, upY, upZ);
   };
 }, "sketchBack");
+
+function connectWebsocket() {
+  websocket = new WebSocket("ws://192.168.182.30:8765/");
+  websocket.onopen = () => console.log("Connection made");
+  websocket.onmessage = ms => {
+    let recvData = ms.data.split(':');
+    console.log(recvData);
+    if (settings.control.readSensor) {
+      settings.discus.roll = recvData[0];
+      settings.discus.pitch = recvData[1];
+      settings.events.variableChanges.discus.roll = true;
+      settings.events.variableChanges.discus.pitch = true;
+    }
+    websocket.send("received");
+  };
+
+  websocket.onclose = event => console.log("Connection closed: " + event.code);
+}
 
 function drawReferenceGround(p, linesFromDiscus, cam) {
   let position = settings.control.followDiscus ? discus.position : p.createVector(cam.eyeX, cam.eyeY, cam.eyeZ);

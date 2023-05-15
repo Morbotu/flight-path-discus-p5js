@@ -22,6 +22,9 @@ let settings = {
     fps: 60,
     followDiscus: true,
     linesFromDiscus: 10,
+    ip: "192.168.182.30",
+    port: "8765",
+    readSensor: false,
   },
   events: {
     reload: false,
@@ -35,6 +38,16 @@ let settings = {
   },
   menu: {
     widgets: [
+      {
+        type: "inputField",
+        location: "control",
+        target: "ip",
+      },
+      {
+        type: "checkbox",
+        location: "control",
+        target: "readSensor",
+      },
       {
         type: "slider",
         location: "discus",

@@ -13,6 +13,7 @@ new p5(p => {
     p.textAlign(p.LEFT, p.TOP);
     p.textSize(16);
     p.text(p.round(fps), 0, 0);
+    
     p.pop();
   };
 
