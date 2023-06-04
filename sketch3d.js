@@ -120,7 +120,7 @@ new p5(p => {
 }, "sketchBack");
 
 function connectWebsocket() {
-  websocket = new WebSocket("ws://192.168.182.30:8765/");
+  websocket = new WebSocket(`ws://${settings.control.ip}:8765/`);
   websocket.onopen = () => console.log("Connection made");
   websocket.onmessage = ms => {
     let recvData = ms.data.split(':');
@@ -130,6 +130,10 @@ function connectWebsocket() {
       settings.discus.pitch = recvData[1];
       settings.events.variableChanges.discus.roll = true;
       settings.events.variableChanges.discus.pitch = true;
+      if (settings.control.compass) {
+        settings.discus.spinDown = recvData[2];
+        settings.events.variableChanges.discus.spinDown = true;
+      }
     }
     websocket.send("received");
   };

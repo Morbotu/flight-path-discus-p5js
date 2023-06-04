@@ -5,6 +5,7 @@ let settings = {
     vy: -10000,
     pitch: -45,
     roll: 45,
+    spinDown: 0,
     dt: 0.001,
     plotScale: 0.05,
     plot: "velocity",
@@ -25,6 +26,7 @@ let settings = {
     ip: "192.168.182.30",
     port: "8765",
     readSensor: false,
+    compass: false,
   },
   events: {
     reload: false,
@@ -47,6 +49,11 @@ let settings = {
         type: "checkbox",
         location: "control",
         target: "readSensor",
+      },
+      {
+        type: "checkbox",
+        location: "control",
+        target: "compass",
       },
       {
         type: "slider",
@@ -115,6 +122,19 @@ let settings = {
         type: "inputField",
         location: "discus",
         target: "roll",
+      },
+      {
+        type: "slider",
+        location: "discus",
+        target: "spinDown",
+        minValue: 0,
+        maxValue: 360,
+        step: 1,
+      },
+      {
+        type: "inputField",
+        location: "discus",
+        target: "spinDown",
       },
       {
         type: "slider",

@@ -97,9 +97,9 @@ class Discus {
     p.push();
     p.fill(this.color);
     p.translate(this.position);
+    p.rotateY(this.spinDown);
     p.rotateZ(this.roll);
     p.rotateX(this.pitch);
-    p.rotateY(this.spinDown);
     p.cylinder(this.outsideRadius, this.thickness, this.detailX, 1, false, false);
     p.cylinder(this.insideRadius, this.thickness, this.detailX, 1, false, false);
     p.translate(0, this.thickness / 2, 0);
