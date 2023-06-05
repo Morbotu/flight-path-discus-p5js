@@ -18,7 +18,7 @@ new p5(p => {
     discus = new Discus(p, settings.discus);
     updatesPerFrame = 1 / settings.control.fps / discus.dt;
   };
-  
+
   p.draw = () => {
     p.background(220);
 
@@ -34,7 +34,7 @@ new p5(p => {
         discus.update(p);
       }
     }
-      
+
     if (settings.events.toggleDebug) {
       if (settings.control.debug)
         p.noDebugMode();
@@ -43,7 +43,7 @@ new p5(p => {
       settings.control.debug = !settings.control.debug;
       settings.events.toggleDebug = false;
     }
-    if(settings.events.homeCamera) {
+    if (settings.events.homeCamera) {
       p.camera(0, -300, 500, 0, 0, 0);
       settings.events.homeCamera = false;
     }
@@ -70,6 +70,9 @@ new p5(p => {
             p.frameRate(settings.control.fps);
             updatesPerFrame = 1 / settings.control.fps / discus.dt;
           }
+          if (location == "control" && target == "simulate" && settings.control.simulate) {
+            discus = new Discus(p, settings.discus);
+          }
           if (location === "control" && target === "readSensor") {
             if (settings.control.readSensor)
               connectWebsocket();
@@ -79,7 +82,7 @@ new p5(p => {
         }
 
     fps = p.frameRate();
-    if (settings.control.followDiscus) {
+    if (settings.control.followDiscus && settings.control.simulate) {
       let dPosition = p5.Vector.sub(discus.position, startPosition);
       cam.setPosition(dPosition.x + cam.eyeX, dPosition.y + cam.eyeY, dPosition.z + cam.eyeZ);
     }
@@ -90,9 +93,20 @@ new p5(p => {
     }
 
     discus.drawDiscus(p);
-    drawReferenceGround(p, settings.control.linesFromDiscus, cam);
+    if (settings.control.drawBin) {
+      drawBin(p, -1100, -7000, 600, 400, 220, "yellow");
+      drawBin(p, 500, -7000, 400, 300, 220, "blue");
+      drawBin(p, -150, -8000, 300, 400, 325, "red");
+    }
+    if (settings.control.drawPath) {
+      if (!settings.control.simulate)
+        discus.update(p);
+      discus.drawDots(p);
+    }
+    if (settings.control.referenceGround)
+      drawReferenceGround(p, settings.control.linesFromDiscus, cam);
   };
-  
+
   p.mouseWheel = event => {
     if (!settings.control.orbit)
       return;
@@ -153,5 +167,20 @@ function drawReferenceGround(p, linesFromDiscus, cam) {
     p.line(position.x - linesX + 1000 * i, 0, position.z - linesZ - 1000 * linesFromDiscus, position.x - linesX + 1000 * i, 0, position.z - linesZ + 1000 * linesFromDiscus);
     p.line(position.x - linesX - 1000 * linesFromDiscus, 0, position.z - linesZ - 1000 * i, position.x - linesX + 1000 * linesFromDiscus, 0, position.z - linesZ - 1000 * i);
     p.line(position.x - linesX - 1000 * linesFromDiscus, 0, position.z - linesZ + 1000 * i, position.x - linesX + 1000 * linesFromDiscus, 0, position.z - linesZ + 1000 * i);
-  } 
+  }
+}
+
+function drawBin(p, positionX, positionZ, width, length, height, color) {
+  p.push();
+  p.fill(color);
+  p.translate(positionX + width / 2, -height / 2, positionZ);
+  p.plane(width, height);
+  p.translate(0, 0, -length);
+  p.plane(width, height);
+  p.translate(-width / 2, 0, length / 2);
+  p.rotateY(p.HALF_PI);
+  p.plane(length, height);
+  p.translate(0, 0, width);
+  p.plane(length, height);
+  p.pop();
 }

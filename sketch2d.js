@@ -6,7 +6,8 @@ new p5(p => {
   
   p.draw = () => {
     p.clear();
-    discus.plotVelocity(p);
+    if (settings.control.plot)
+      discus.plotVelocity(p);
     menu.drawMenu(p);
 
     p.push();

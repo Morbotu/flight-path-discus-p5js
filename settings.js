@@ -17,9 +17,10 @@ let settings = {
   control: {
     orbit: true,
     simulate: false,
+    plot: false,
     debug: false,
     sensitivityZoom: 0.3,
-    sensitivityOrbit: 5,
+    sensitivityOrbit: 10,
     fps: 60,
     followDiscus: true,
     linesFromDiscus: 10,
@@ -27,6 +28,9 @@ let settings = {
     port: "8765",
     readSensor: false,
     compass: false,
+    drawBin: true,
+    drawPath: false,
+    referenceGround: false,
   },
   events: {
     reload: false,
@@ -54,6 +58,16 @@ let settings = {
         type: "checkbox",
         location: "control",
         target: "compass",
+      },
+      {
+        type: "checkbox",
+        location: "control",
+        target: "referenceGround",
+      },
+      {
+        type: "checkbox",
+        location: "control",
+        target: "drawPath",
       },
       {
         type: "slider",
