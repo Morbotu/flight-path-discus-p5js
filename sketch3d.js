@@ -70,9 +70,6 @@ new p5(p => {
             p.frameRate(settings.control.fps);
             updatesPerFrame = 1 / settings.control.fps / discus.dt;
           }
-          if (location == "control" && target == "simulate" && settings.control.simulate) {
-            discus = new Discus(p, settings.discus);
-          }
           if (location === "control" && target === "readSensor") {
             if (settings.control.readSensor)
               connectWebsocket();
@@ -82,13 +79,18 @@ new p5(p => {
         }
 
     fps = p.frameRate();
-    if (settings.control.followDiscus && settings.control.simulate) {
+    if (settings.control.followDiscus) {
       let dPosition = p5.Vector.sub(discus.position, startPosition);
       cam.setPosition(dPosition.x + cam.eyeX, dPosition.y + cam.eyeY, dPosition.z + cam.eyeZ);
     }
     if (settings.events.tpToDiscus) {
-      cam.setPosition(discus.position.x, discus.position.y - 300, discus.position.z + 500);
-      cam.lookAt(discus.position.x, discus.position.y, discus.position.z);
+      if (settings.control.drawPath && !settings.control.simulate) {
+        cam.setPosition(0, -300, 500);
+        cam.lookAt(0, 0, 0);
+      } else {
+        cam.setPosition(discus.position.x, discus.position.y - 300, discus.position.z + 500);
+        cam.lookAt(discus.position.x, discus.position.y, discus.position.z);
+      }
       settings.events.tpToDiscus = false;
     }
 
@@ -99,8 +101,6 @@ new p5(p => {
       drawBin(p, -150, -8000, 300, 400, 325, "red");
     }
     if (settings.control.drawPath) {
-      if (!settings.control.simulate)
-        discus.update(p);
       discus.drawDots(p);
     }
     if (settings.control.referenceGround)
@@ -161,6 +161,8 @@ function drawReferenceGround(p, linesFromDiscus, cam) {
   let linesZ = position.z % 1000;
   p.line(position.x - linesX, 0, position.z - linesZ - 1000 * linesFromDiscus, position.x - linesX, 0, position.z - linesZ + 1000 * linesFromDiscus);
   p.line(position.x - linesX - 1000 * linesFromDiscus, 0, position.z - linesZ, position.x - linesX + 1000 * linesFromDiscus, 0, position.z - linesZ);
+  // p.noStroke();
+  // p.cylinder(5, 100, 24, 1, false, false);
 
   for (let i = 0; i < p.floor(linesFromDiscus); i++) {
     p.line(position.x - linesX - 1000 * i, 0, position.z - linesZ - 1000 * linesFromDiscus, position.x - linesX - 1000 * i, 0, position.z - linesZ + 1000 * linesFromDiscus);

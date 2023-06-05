@@ -1,5 +1,5 @@
 class Discus {
-  constructor(p, { x = 0, y = 0, z = 0, vx = 0, vy = 0, vz = 0, ax = 0, ay = 0, az = 0, pitch = 0, roll = 0, spinDown = 0, vPitch = 0, vRoll = 0, vSpinDown = 0, aPitch = 0, aRoll = 0, aSpinDown = 0, dt = 0.1, color = "white", outsideRadius = 240, insideRadius = 110, thickness = 4, detailX = 24, mass = 0.125, airResistanceConstant = 0.21e-3, plot = "velocity", plotFunction = "p5.Vector.mag(value)", plotSteps = 20, plotScale = 0.1, plotMin = 0, plotMax = 10000 } = {}) {
+  constructor(p, { x = 0, y = 0, z = 0, vx = 0, vy = 0, vz = 0, ax = 0, ay = 0, az = 0, pitch = 0, roll = 0, spinDown = 0, vPitch = 0, vRoll = 0, vSpinDown = 0, aPitch = 0, aRoll = 0, aSpinDown = 0, dt = 0.1, color = "white", outsideRadius = 120, insideRadius = 65, thickness = 4, detailX = 24, mass = 0.125, airResistanceConstant = 0.21e-3, plot = "velocity", plotFunction = "p5.Vector.mag(value)", plotSteps = 20, plotScale = 0.1, plotMin = 0, plotMax = 10000 } = {}) {
     this.detailX = detailX;
     this.outsideRadius = outsideRadius;
     this.insideRadius = insideRadius;
@@ -32,6 +32,9 @@ class Discus {
     this.plotSteps = plotSteps;
     this.plotScale = plotScale;
     this.plotTimeStart = 0;
+
+    if (!settings.control.simulate && settings.control.drawPath)
+      this.preCalculatePath(p);
   }
 
   update(p) {
@@ -40,7 +43,7 @@ class Discus {
     this._calculateVelocity(p);
     this._calculatePosition(p);
     this.plotPoints.push(this.plotFunction(this[this.plot]));
-    this.pathDots.push(this.position.copy());
+
     while (this.plotPoints.length > p.width - this.plotWidth - this.plotBottomLeft.x) {
       this.plotPoints.shift();
       this.plotTimeStart++;
@@ -50,6 +53,24 @@ class Discus {
       settings.events.variableChanges.control.simulate = true;
       settings.control.simulate = false;
     }
+  }
+
+  preCalculatePath(p) {
+    let startPosition = this.position.copy();
+    let startVelocity = this.velocity.copy();
+    let startAcceleration = this.acceleration.copy();
+
+    while (this.position.y <= 0) {
+      this._calculateForce(p);
+      this._calculateAcceleration(p);
+      this._calculateVelocity(p);
+      this._calculatePosition(p);
+      this.pathDots.push(this.position.copy());
+    }
+
+    this.position = startPosition;
+    this.velocity = startVelocity;
+    this.acceleration = startAcceleration;
   }
 
   _calculatePosition(p) {
@@ -78,8 +99,8 @@ class Discus {
     let aInside = this.insideRadius * p.sin(this.roll - p.createVector(this.velocity.x, this.velocity.y).heading());
     let bInside = this.insideRadius * p.sin(this.pitch + p.createVector(this.velocity.z, this.velocity.y).heading());
     let surfaceArea = p.abs(p.PI * (aOutside * bOutside - aInside * bInside));
-
     let airResistanceWithoutConstant = 0.5 * 1.293e-9 * surfaceArea * this.velocity.magSq();
+    
 
     let drag = this.velocity
       .copy()
@@ -98,8 +119,8 @@ class Discus {
   drawDiscus(p, useStartPosition = false) {
     p.push();
     p.fill(this.color);
-    if (settings.control.simulate)
-      p.translate(this.position);
+    // if (settings.control.simulate)
+    p.translate(this.position);
     p.rotateY(this.spinDown);
     p.rotateZ(this.roll);
     p.rotateX(this.pitch);
@@ -113,14 +134,17 @@ class Discus {
   }
 
   drawDots(p) {
+    if (this.pathDots.length > 2){
     p.push();
     p.noStroke();
     p.fill("red");
-    for (let position of this.pathDots) {
-      p.translate(position.x, position.y, position.z);
+    for (let dotPosition of this.pathDots) {
+      p.push();
+      p.translate(dotPosition);
       p.sphere(10);
+      p.pop();
     }
-    p.pop();
+    p.pop();}
   }
 
   plotVelocity(p) {

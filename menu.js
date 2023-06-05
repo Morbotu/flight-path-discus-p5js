@@ -169,7 +169,9 @@ class Menu {
     inputField.mouseOver(() => settings.control.orbit = false);
     inputField.mouseOut(() => settings.control.orbit = true);
     inputField.input(() => {
-      settings[location][target] = inputField.value();
+      let value = Number(inputField.value());
+      value = value !== NaN ? value : 0;
+      settings[location][target] = value;
       settings.events.variableChanges[location][target] = true;
     });
     let obj = { element: inputField, type, location, target, row: this.row };
