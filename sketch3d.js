@@ -130,6 +130,7 @@ new p5(p => {
 
     p.resizeCanvas(p.windowWidth, p.windowHeight);
     cam.camera(eyeX, eyeY, eyeZ, centerX, centerY, centerZ, upX, upY, upZ);
+    cam.perspective(p.PI / 3.0, p.width / p.height, 0.1, 100000);
   };
 }, "sketchBack");
 
