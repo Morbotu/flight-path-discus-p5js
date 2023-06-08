@@ -7,12 +7,12 @@ let settings = {
     roll: 45,
     spinDown: 0,
     dt: 0.001,
-    plotScale: 0.05,
-    plot: "velocity",
-    plotFunction: "p5.Vector.mag(value)",
-    plotMin: -2000,
-    plotMax: 10000,
-    color: "white",
+    // plotScale: 0.05,
+    // plot: "velocity",
+    // plotFunction: "p5.Vector.mag(value)",
+    // plotMin: -2000,
+    // plotMax: 10000,
+    // color: "white",
   },
   control: {
     orbit: true,
@@ -30,7 +30,7 @@ let settings = {
     compass: false,
     drawBin: true,
     drawPath: false,
-    referenceGround: false,
+    referenceGround: true,
   },
   events: {
     reload: false,
@@ -44,6 +44,58 @@ let settings = {
   },
   menu: {
     widgets: [
+      {
+        type: "section",
+        name: "Simulation",
+      },
+      {
+        type: "checkbox",
+        location: "control",
+        target: "simulate",
+      },
+      {
+        type: "button",
+        location: "events",
+        target: "reload",
+      },
+      {
+        type: "section",
+        name: "Control",
+      },
+      {
+        type: "checkbox",
+        location: "control",
+        target: "followDiscus",
+      },
+      {
+        type: "checkbox",
+        location: "control",
+        target: "referenceGround",
+      },
+      {
+        type: "checkbox",
+        location: "control",
+        target: "drawBin",
+      },
+      {
+        type: "checkbox",
+        location: "control",
+        target: "drawPath",
+      },
+      {
+        type: "button",
+        location: "events",
+        target: "tpToDiscus",
+      },
+      {
+        type: "button",
+        location: "events",
+        target: "homeCamera",
+      },
+      {
+        type: "section",
+        name: "Sensor",
+      },
       {
         type: "inputField",
         location: "control",
@@ -60,22 +112,8 @@ let settings = {
         target: "compass",
       },
       {
-        type: "checkbox",
-        location: "control",
-        target: "referenceGround",
-      },
-      {
-        type: "checkbox",
-        location: "control",
-        target: "drawPath",
-      },
-      {
-        type: "slider",
-        location: "discus",
-        target: "vz",
-        minValue: -100000,
-        maxValue: 100000,
-        step: 1,
+        type: "section",
+        name: "Initial conditions",
       },
       {
         type: "slider",
@@ -88,7 +126,7 @@ let settings = {
       {
         type: "inputField",
         location: "discus",
-        target: "vz",
+        target: "vx",
       },
       {
         type: "slider",
@@ -97,6 +135,24 @@ let settings = {
         minValue: -100000,
         maxValue: 0,
         step: 1,
+      },
+      {
+        type: "inputField",
+        location: "discus",
+        target: "vy",
+      },
+      {
+        type: "slider",
+        location: "discus",
+        target: "vz",
+        minValue: -100000,
+        maxValue: 100000,
+        step: 1,
+      },
+      {
+        type: "inputField",
+        location: "discus",
+        target: "vz",
       },
       {
         type: "slider",
@@ -149,83 +205,6 @@ let settings = {
         type: "inputField",
         location: "discus",
         target: "spinDown",
-      },
-      {
-        type: "slider",
-        location: "discus",
-        target: "plotScale",
-        minValue: 0.01,
-        maxValue: 1,
-        step: 0.01,
-      },
-      {
-        type: "slider",
-        location: "discus",
-        target: "plotMin",
-        minValue: -10000,
-        maxValue: 0,
-        step: 1,
-      },
-      {
-        type: "slider",
-        location: "discus",
-        target: "plotMax",
-        minValue: 0,
-        maxValue: 100000,
-        step: 1,
-      },
-      {
-        type: "inputField",
-        location: "discus",
-        target: "plotScale",
-      },
-      {
-        type: "inputField",
-        location: "discus",
-        target: "plotFunction",
-      },
-      {
-        type: "inputField",
-        location: "discus",
-        target: "plot",
-      },
-      {
-        type: "button",
-        location: "events",
-        target: "toggleDebug",
-      },
-      {
-        type: "button",
-        location: "events",
-        target: "tpToDiscus",
-      },
-      {
-        type: "button",
-        location: "events",
-        target: "homeCamera",
-      },
-      {
-        type: "checkbox",
-        location: "control",
-        target: "simulate",
-      },
-      {
-        type: "button",
-        location: "events",
-        target: "reload",
-      },
-      {
-        type: "checkbox",
-        location: "control",
-        target: "followDiscus",
-      },
-      {
-        type: "slider",
-        location: "control",
-        target: "fps",
-        minValue: 1,
-        maxValue: 60,
-        step: 1,
       },
     ],
   },

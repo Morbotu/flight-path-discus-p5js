@@ -94,9 +94,9 @@ class Discus {
 
   _calculateForce(p) {
     let forceGravity = p.createVector(0, 9810 * this.mass, 0);
-    let aOutside = this.outsideRadius * p.sin(this.roll - p.createVector(this.velocity.x, this.velocity.y).heading());
+    let aOutside = this.outsideRadius * p.sin(this.roll - this.spinDown - p.createVector(this.velocity.x, this.velocity.y).heading());
     let bOutside = this.outsideRadius * p.sin(this.pitch + p.createVector(this.velocity.z, this.velocity.y).heading());
-    let aInside = this.insideRadius * p.sin(this.roll - p.createVector(this.velocity.x, this.velocity.y).heading());
+    let aInside = this.insideRadius * p.sin(this.roll - this.spinDown - p.createVector(this.velocity.x, this.velocity.y).heading());
     let bInside = this.insideRadius * p.sin(this.pitch + p.createVector(this.velocity.z, this.velocity.y).heading());
     let surfaceArea = p.abs(p.PI * (aOutside * bOutside - aInside * bInside));
     let airResistanceWithoutConstant = 0.5 * 1.293e-9 * surfaceArea * this.velocity.magSq();
@@ -106,7 +106,7 @@ class Discus {
       .copy()
       .normalize()
       .mult(-airResistanceWithoutConstant * 0.21);
-    let normalDiscus = p.createVector(p.cos(this.pitch) * p.sin(this.roll), -p.cos(this.pitch) * p.cos(this.roll), -p.sin(this.pitch));
+    let normalDiscus = p.createVector(p.cos(this.pitch) * p.sin(this.roll), -p.cos(this.pitch) * p.cos(this.roll) * p.cos(this.spinDown), -p.sin(this.pitch) * p.cos(this.spinDown));
     let lift = this.velocity
       .copy()
       .normalize()

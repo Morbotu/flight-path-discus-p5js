@@ -13,7 +13,7 @@ new p5(p => {
     p.push();
     p.textAlign(p.LEFT, p.TOP);
     p.textSize(16);
-    p.text(p.round(fps), 0, 0);
+    p.text("FPS=" + p.round(fps), 0, 0);
     
     p.pop();
   };
