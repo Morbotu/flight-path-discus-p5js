@@ -159,17 +159,34 @@ function drawReferenceGround(p, linesFromDiscus, cam) {
   let position = settings.control.followDiscus ? discus.position : p.createVector(cam.eyeX, cam.eyeY, cam.eyeZ);
   let linesX = position.x % 1000;
   let linesZ = position.z % 1000;
-  p.line(position.x - linesX, 0, position.z - linesZ - 1000 * linesFromDiscus, position.x - linesX, 0, position.z - linesZ + 1000 * linesFromDiscus);
-  p.line(position.x - linesX - 1000 * linesFromDiscus, 0, position.z - linesZ, position.x - linesX + 1000 * linesFromDiscus, 0, position.z - linesZ);
-  // p.noStroke();
-  // p.cylinder(5, 100, 24, 1, false, false);
+
+  p.push();
+  p.fill("black");
+  p.noStroke();
 
   for (let i = 0; i < p.floor(linesFromDiscus); i++) {
-    p.line(position.x - linesX - 1000 * i, 0, position.z - linesZ - 1000 * linesFromDiscus, position.x - linesX - 1000 * i, 0, position.z - linesZ + 1000 * linesFromDiscus);
-    p.line(position.x - linesX + 1000 * i, 0, position.z - linesZ - 1000 * linesFromDiscus, position.x - linesX + 1000 * i, 0, position.z - linesZ + 1000 * linesFromDiscus);
-    p.line(position.x - linesX - 1000 * linesFromDiscus, 0, position.z - linesZ - 1000 * i, position.x - linesX + 1000 * linesFromDiscus, 0, position.z - linesZ - 1000 * i);
-    p.line(position.x - linesX - 1000 * linesFromDiscus, 0, position.z - linesZ + 1000 * i, position.x - linesX + 1000 * linesFromDiscus, 0, position.z - linesZ + 1000 * i);
+    p.push();
+    p.translate(position.x - linesX - 1000 * i, 0, position.z - linesZ);
+    p.rotateX(p.HALF_PI);
+    p.cylinder(5, 2000 * linesFromDiscus, 24, 1, false, false);
+    p.pop();
+    p.push();
+    p.translate(position.x - linesX + 1000 * i, 0, position.z - linesZ);
+    p.rotateX(p.HALF_PI);
+    p.cylinder(5, 2000 * linesFromDiscus, 24, 1, false, false);
+    p.pop();
+    p.push();
+    p.translate(position.x - linesX, 0, position.z - linesZ - 1000 * i);
+    p.rotateZ(p.HALF_PI);
+    p.cylinder(5, 2000 * linesFromDiscus, 24, 1, false, false);
+    p.pop();
+    p.push();
+    p.translate(position.x - linesX, 0, position.z - linesZ + 1000 * i);
+    p.rotateZ(p.HALF_PI);
+    p.cylinder(5, 2000 * linesFromDiscus, 24, 1, false, false);
+    p.pop();
   }
+  p.pop();
 }
 
 function drawBin(p, positionX, positionZ, width, length, height, color) {
