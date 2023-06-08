@@ -37,12 +37,14 @@ class Discus {
       let spinDownVector = p.createVector(0, angleVector.y).setHeading(-this.spinDown - p.HALF_PI);
       this.velocity = p.createVector(spinDownVector.x, angleVector.x, spinDownVector.y).normalize().mult(v);
 
-      settings.discus.vx = this.velocity.x;
-      settings.discus.vy = this.velocity.y;
-      settings.discus.vz = this.velocity.z;
-      settings.events.variableChanges.discus.vx = true;
-      settings.events.variableChanges.discus.vy = true;
-      settings.events.variableChanges.discus.vz = true;
+      if (settings.discus != this.velocity.x && settings.discus.vy != this.velocity.y && settings.discus.vz != this.velocity.z) {
+        settings.discus.vx = this.velocity.x;
+        settings.discus.vy = this.velocity.y;
+        settings.discus.vz = this.velocity.z;
+        settings.events.variableChanges.discus.vx = true;
+        settings.events.variableChanges.discus.vy = true;
+        settings.events.variableChanges.discus.vz = true;
+      }
     }
 
     if (!settings.control.simulate && settings.control.drawPath)
