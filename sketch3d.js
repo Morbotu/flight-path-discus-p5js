@@ -146,7 +146,7 @@ function connectWebsocket() {
       settings.events.variableChanges.discus.roll = true;
       settings.events.variableChanges.discus.pitch = true;
       if (settings.control.compass) {
-        settings.discus.spinDown = recvData[2];
+        settings.discus.spinDown = recvData[2] + settings.control.phaseSpindown;
         settings.events.variableChanges.discus.spinDown = true;
       }
     }

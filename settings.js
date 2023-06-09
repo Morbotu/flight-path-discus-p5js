@@ -33,6 +33,7 @@ let settings = {
     drawBin: true,
     drawPath: true,
     referenceGround: true,
+    phaseSpindown: 0,
   },
   events: {
     reload: false,
@@ -112,6 +113,19 @@ let settings = {
         type: "checkbox",
         location: "control",
         target: "compass",
+      },
+      {
+        type: "slider",
+        location: "control",
+        target: "phaseSpindown",
+        minValue: 0,
+        maxValue: 360,
+        step: 1,
+      },
+      {
+        type: "inputField",
+        location: "control",
+        target: "phaseSpindown",
       },
       {
         type: "section",
